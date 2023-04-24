@@ -1,0 +1,63 @@
+﻿@model List<StudentsCourseDetails.Models.StudentModel>
+@using System.Web
+@addTagHelper*, Microsoft.AspNetCore.Mvc.TagHelpers
+@using NonFactors.Mvc.Grid;
+@using System.Web.Helpers;
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<script type="text/javascript">
+
+
+    $(function() {
+        getStudent(@Model[0].StudentId);
+    });
+    function getStudent(e) {
+        $.get('@Url.Action("Details","Student")?id=' + e, function(data) {
+            $('#divStudentDteails').html(data);
+        });
+    }
+    function deleteStudent(e) {
+        $.get('@Url.Action("Delete","Student")?id=' + e, function(data) {
+            window.location.href = "@Url.Action("Index", "Student")";
+        });
+    }
+
+</script>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Studets</title>
+    <link href="~/css/css/mvc-grid/mvc-grid.css" rel="stylesheet" />
+</head>
+
+<h1>Index</h1>
+
+<div class="container">
+
+    <div>
+
+        @(Html.Grid(Model).Id("tbiStudents").AppendCss("table table-bordered table-responsive table-hover").Build(columns =>
+        {
+        columns.Add(model => model.StudentId).Titled("Student ID");
+        columns.Add(model => model.StudentName).Titled("Student Name");
+        columns.Add(model => model.MailId).Titled("Mail ID");
+        columns.Add(model => model.CourseID).Titled("CourseID");
+        columns.Add(model => model.CourseName).Titled("CourseName");
+        columns.Add(model => model.AttendanceText).Titled("Attendance");
+        columns.Add(model => $"<a href=\"javascript:;\" id=\"{model.StudentId}\" onclick=\"getStudent({model.StudentId});\">Edit</button>").Encoded(false);
+        columns.Add(model => $"<a href=\"javascript:;\" id=\"{model.StudentId}\" onclick=\"deleteStudent({model.StudentId});\">Delete</button>").Encoded(false);
+
+
+        })
+        )
+
+    </div>
+</div>
+
+<div id="divStudentDteails"></div>
+
+</html>

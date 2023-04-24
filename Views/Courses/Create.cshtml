@@ -1,0 +1,121 @@
+﻿@model StudentsCourseDetails.Models.CourseModel
+
+<script type="text/javascript">
+    $(function() {
+
+        $(document).ready(function() {
+            $('#txtCourseID').keypress(function(e) {
+                NumericOnly(e);
+            });
+         
+        });
+
+        function ValidateUser() {
+            var return_val = true;
+            if ($('#txtCourseID').val().trim() == '') {
+                $('#msgid').show();
+                return_val = false;
+            } else {
+                $('#msgid').hide();
+            }
+            if ($('#txtCourseName').val().trim() == '') {
+                $('#msgname').show();
+                return_val = false;
+            } else {
+                $('#msgname').hide();
+            }
+            
+            if ($('#txtCourseYear').val().trim() == '') {
+                $('#msgcourseID').show();
+                return_val = false;
+            } else {
+                $('#msgcourseID').hide();
+            }
+           
+            return return_val;
+        }
+   
+
+        function NumericOnly(e) {
+            var regex = new RegExp("^[0-9]+$");
+            var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+            if (regex.test(str)) {
+                return true;
+            }
+            e.preventDefault();
+            return false;
+        }
+
+        $('#btnSave').click(function(e) {
+            debugger
+            if (ValidateUser()) {
+                e.preventDefault();
+                var data = new Object();
+                data.CourseID = $('#txtCourseID').val();
+                data.CourseName = $('#txtCourseName').val();
+                data.CourseYear = $('#txtCourseYear').val();
+
+                $.ajax({
+                    url: "/Courses/Save",
+                    type: "POST",
+                    data: JSON.stringify(data),
+                    dataType: "json",
+                    contentType: "application/json",
+                    success: function(data) {
+                        alert(data.msg);
+                         window.location.href= "@Url.Action("Index", "Courses")";
+                    },
+                    error: function() {
+                        alert("Error occured!!")
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+<hr />
+
+
+<div class="container">
+    <h4>Student</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4 ">
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <label asp-for="CourseID" class="control-label"></label>
+                    <input id="txtCourseID" asp-for="CourseID" class="form-control" value="" />
+                </div>
+                <div class="col-md-6">
+                    @Html.ValidationMessageFor(Model => Model.CourseID, "Please enter StudentID", new { @class = "text-danger", id="msgid", style = "display:none" })
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <label asp-for="CourseName" class="control-label"></label>
+                    <input id="txtCourseName" asp-for="CourseName" class="form-control" value=""/>
+                </div>
+                <div class="col-md-6">
+                    @Html.ValidationMessageFor(Model => Model.CourseName, "Please enter CourseName", new { @class = "text-danger", id="msgname", style = "display:none" })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="col-md-6">
+                <label asp-for="CourseYear" class="control-label"></label>
+                <input id="txtCourseYear" asp-for="CourseYear" class="form-control" value=""/>
+            </div>
+            <div class="col-md-6">
+                @Html.ValidationMessageFor(Model => Model.CourseYear, "Please enter CourseYear", new { @class = "text-danger",id="msgcourseID", style = "display:none" })
+            </div>
+        
+        </div>
+      
+        </div>
+           <div class="form-group" style="margin-top:20px;">
+                <input id="btnSave" type="submit" value="Save" class="btn btn-primary" />
+            </div>
+    </div>
+
+</div>
