@@ -83,7 +83,6 @@ namespace StudentsCourseDetails.Controllers
                 else
                 {
                     return Json(new { msg = "failed" });
-
                 }
             }
             else
@@ -91,7 +90,6 @@ namespace StudentsCourseDetails.Controllers
                 return Json(new { msg = "failed" });
             }
         }
-
         public ActionResult Delete(int id)
         {
             if (id != 0)
